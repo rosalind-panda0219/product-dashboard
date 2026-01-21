@@ -4,8 +4,8 @@
 
 ### Prerequisites
 
-- Node.js 18+ 
-- npm 9+
+- Node.js 24 
+- npm 11+
 
 ### Installation
 
@@ -25,19 +25,17 @@ The application will be available at:
 - **Product List MFE**: http://localhost:4201
 - **Product Details MFE**: http://localhost:4202
 
+landing page will look something like below.
+
+![alt text](image.png)
+
 ## Useful Commands
 
 ```bash
 # Development
 npx nx serve shell                    # Start shell with all remotes
-npx nx serve product-list             # Start product-list standalone
-npx nx serve product-details          # Start product-details standalone
-
-# Building
-npx nx build shell                    # Build shell app
-npx nx build product-list             # Build product-list MFE
-npx nx build product-details          # Build product-details MFE
-npx nx run-many --target=build --all  # Build everything
+npx nx serve product-list             # Start product-list only
+npx nx serve product-details          # Start product-details only
 
 # Dependency Graph
 npx nx graph                          # View dependency graph
@@ -53,7 +51,6 @@ The host application that:
 - Provides the main layout and navigation
 - Loads MFEs via Module Federation at runtime
 - Coordinates communication between MFEs
-- Manages global state indicators
 
 #### Product List MFE (`apps/product-list`)
 Responsible for:
@@ -107,12 +104,12 @@ Responsible for:
 ```
 product-dashboard/
 ├── apps/
-│   ├── shell/              # Host application (orchestrator)
+│   ├── shell/              # Host application
 │   ├── product-list/       # MFE: Product listing functionality
 │   └── product-details/    # MFE: Product detail view
 └── libs/
     ├── models/             # Shared TypeScript interfaces & types
-    ├── services/           # Shared services (EventBus, API)
+    ├── services/           # Shared services like EventBus, API
     └── ui-components/      # Reusable UI components
 ```
 
@@ -128,33 +125,6 @@ product-dashboard/
    - `@product-dashboard/ui-components` - Reusable Angular components
 4. **Standalone Components**
    - Using Angular's standalone component architecture
-
-## Technical Decisions taken & their Tradeoffs
-
-### Why Module Federation?
-- Runtime integration (no rebuild of shell needed)
-- Independent deployment of MFEs
-- Shared dependencies (Angular, RxJS)
-- Requires webpack configuration
-
-### Why Nx Monorepo?
-- Shared code via libraries
-- Consistent tooling across projects
-- Dependency graph visualization
-- Affected commands for CI optimization
-
-### Why RxJS EventBus over NgRx?
-- Simpler for this scope
-- No additional dependencies
-- Easy to understand and debug
-- For larger apps, we can consider NgRx or Signals Store
-
-### Why Standalone Components?
-- Cleaner, more modular code
-- Better tree-shaking
-- Aligns with Angular's future direction
-- No NgModule boilerplate
-
 
 ## What I Would Improve With Time if it has to be a production-grade application
 

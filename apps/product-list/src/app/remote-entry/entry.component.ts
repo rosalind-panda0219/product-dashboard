@@ -25,7 +25,6 @@ import {
     LoadingSpinnerComponent,
     ErrorMessageComponent,
     EmptyStateComponent,
-    BadgeComponent,
   ],
   templateUrl: './entry.component.html',
   styleUrls: ['./entry.component.scss'],

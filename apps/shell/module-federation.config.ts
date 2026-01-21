@@ -10,13 +10,14 @@ const config: ModuleFederationConfig = {
    * Shared libraries configuration - ensures singleton instances
    */
   shared: (libraryName, sharedConfig) => {
-    // Ensure our custom libraries are shared as singletons
+    // Workspace libs need singleton: true but NOT strictVersion
+    // (they all have version 0.0.0 which causes issues with strict checks)
     if (libraryName.startsWith('@product-dashboard/')) {
       return {
         ...sharedConfig,
         singleton: true,
-        strictVersion: true,
-        requiredVersion: 'auto',
+        strictVersion: false,
+        requiredVersion: false,
       };
     }
     return sharedConfig;
