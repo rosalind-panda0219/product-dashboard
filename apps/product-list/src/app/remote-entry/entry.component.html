@@ -1,0 +1,95 @@
+<div class="product-list-container">
+  <!-- filter bar -->
+  <header class="list-header">
+    <div class="header-content">
+      <h2 class="title">Products</h2>
+      <p class="subtitle">Browse our collection of {{ totalProducts() }} products</p>
+    </div>
+
+    <div class="filters">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search products..."
+          [ngModel]="searchTerm()"
+          (ngModelChange)="onSearchChange($event)"
+        />
+        @if (searchTerm()) {
+          <button class="clear-search" (click)="clearSearch()" aria-label="Clear search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        }
+      </div>
+
+      <div class="category-filter">
+        <select
+          class="category-select"
+          [ngModel]="selectedCategory()"
+          (ngModelChange)="onCategoryChange($event)"
+        >
+          <option value="">All Categories</option>
+          @for (cat of categories; track cat.value) {
+            <option [value]="cat.value">{{ cat.label }}</option>
+          }
+        </select>
+      </div>
+
+      <label class="stock-filter">
+        <input
+          type="checkbox"
+          [ngModel]="showInStockOnly()"
+          (ngModelChange)="onStockFilterChange($event)"
+        />
+        <span>In Stock Only</span>
+      </label>
+    </div>
+  </header>
+
+  <main class="list-content">
+    @if (isLoading()) {
+      <ui-loading-spinner message="Loading products..." />
+    } @else if (error()) {
+      <ui-error-message
+        title="Failed to load products"
+        [message]="error()!"
+        (retry)="loadProducts()"
+      />
+    } @else if (filteredProducts().length === 0) {
+      <ui-empty-state
+        title="No products found"
+        description="Try adjusting your search or filter criteria"
+        icon="search"
+        actionText="Clear Filters"
+        (action)="clearFilters()"
+      />
+    } @else {
+      <!-- responsive grid -->
+      <div class="products-grid">
+        @for (product of filteredProducts(); track product.id) {
+          <ui-product-card
+            [product]="product"
+            [selected]="selectedProductId() === product.id"
+            (cardClick)="onProductSelect(product)"
+          />
+        }
+      </div>
+
+      <div class="results-summary">
+        Showing {{ filteredProducts().length }} of {{ totalProducts() }} products
+        @if (selectedProductId()) {
+          <span class="selected-info">
+            • 1 selected
+          </span>
+        }
+      </div>
+    }
+  </main>
+</div>

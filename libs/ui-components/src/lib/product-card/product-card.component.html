@@ -1,0 +1,61 @@
+<article
+  class="product-card"
+  [class.selected]="selected"
+  [class.out-of-stock]="!product.inStock"
+  (click)="onCardClick()"
+  (keydown.enter)="onCardClick()"
+  (keydown.space)="onCardClick()"
+  tabindex="0"
+  role="button"
+  [attr.aria-label]="'View details for ' + product.name"
+  [attr.aria-pressed]="selected"
+>
+  <div class="card-image-container">
+    <img
+      [src]="product.imageUrl"
+      [alt]="product.name"
+      class="card-image"
+      loading="lazy"
+    />
+    @if (!product.inStock) {
+      <div class="out-of-stock-overlay">
+        <span>Out of Stock</span>
+      </div>
+    }
+    @if (product.rating >= 4.7) {
+      <ui-badge class="top-rated-badge" variant="success">Top Rated</ui-badge>
+    }
+  </div>
+
+  <div class="card-content">
+    <div class="card-header">
+      <h3 class="card-title" [title]="product.name">{{ product.name }}</h3>
+      <ui-badge [variant]="getCategoryVariant(product.category)">
+        {{ formatCategory(product.category) }}
+      </ui-badge>
+    </div>
+
+    <p class="card-description">{{ product.description | slice:0:100 }}{{ product.description.length > 100 ? '...' : '' }}</p>
+
+    <div class="card-footer">
+      <div class="rating-price">
+        <ui-rating-stars [rating]="product.rating" />
+        <ui-price-tag [price]="product.price" />
+      </div>
+
+      <div class="card-tags">
+        @for (tag of product.tags.slice(0, 3); track tag) {
+          <span class="tag">{{ tag }}</span>
+        }
+      </div>
+    </div>
+  </div>
+
+  @if (selected) {
+    <div class="selection-indicator" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+      </svg>
+    </div>
+  }
+</article>

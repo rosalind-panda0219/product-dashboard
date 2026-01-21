@@ -1,0 +1,122 @@
+<div class="product-details-container">
+  <!-- placeholder shown when no product is selected -->
+  @if (!selectedProduct()) {
+    <div class="no-selection">
+      <ui-empty-state
+        title="No Product Selected"
+        description="Select a product from the list to view its details"
+        icon="info"
+      />
+    </div>
+  } @else {
+    <article class="product-details">
+      <header class="details-header">
+        <button class="back-btn" (click)="clearSelection()" aria-label="Clear selection">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+        <h2 class="details-title">Product Details</h2>
+      </header>
+
+      <div class="details-content">
+        <div class="product-image-section">
+          <img
+            [src]="selectedProduct()!.imageUrl"
+            [alt]="selectedProduct()!.name"
+            class="product-image"
+          />
+          @if (!selectedProduct()!.inStock) {
+            <div class="out-of-stock-banner">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+              <span>Currently Out of Stock</span>
+            </div>
+          }
+        </div>
+
+        <div class="product-info-section">
+          <div class="product-header">
+            <h1 class="product-name">{{ selectedProduct()!.name }}</h1>
+            <ui-badge [variant]="getCategoryVariant()">
+              {{ formatCategory(selectedProduct()!.category) }}
+            </ui-badge>
+          </div>
+
+          <div class="rating-row">
+            <ui-rating-stars [rating]="selectedProduct()!.rating" />
+            <span class="rating-count">({{ getReviewCount() }} reviews)</span>
+          </div>
+
+          <ui-price-tag
+            [price]="selectedProduct()!.price"
+            size="large"
+          />
+
+          <div class="product-description">
+            <h3>Description</h3>
+            <p>{{ selectedProduct()!.description }}</p>
+          </div>
+
+          <div class="product-tags">
+            <h3>Tags</h3>
+            <div class="tags-list">
+              @for (tag of selectedProduct()!.tags; track tag) {
+                <span class="tag">{{ tag }}</span>
+              }
+            </div>
+          </div>
+
+          <div class="product-specs">
+            <h3>Product Information</h3>
+            <dl class="specs-list">
+              <div class="spec-item">
+                <dt>Product ID</dt>
+                <dd>#{{ selectedProduct()!.id }}</dd>
+              </div>
+              <div class="spec-item">
+                <dt>Category</dt>
+                <dd>{{ formatCategory(selectedProduct()!.category) }}</dd>
+              </div>
+              <div class="spec-item">
+                <dt>Availability</dt>
+                <dd class="availability" [class.in-stock]="selectedProduct()!.inStock">
+                  {{ selectedProduct()!.inStock ? 'In Stock' : 'Out of Stock' }}
+                </dd>
+              </div>
+              <div class="spec-item">
+                <dt>Rating</dt>
+                <dd>{{ selectedProduct()!.rating }} / 5</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="action-buttons">
+            <!-- FIXME: wire these up to actual cart/wishlist services -->
+            <button
+              class="btn btn-primary"
+              [disabled]="!selectedProduct()!.inStock"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1" />
+                <circle cx="20" cy="21" r="1" />
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+              </svg>
+              Add to Cart
+            </button>
+            <button class="btn btn-secondary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+              Add to Wishlist
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+  }
+</div>

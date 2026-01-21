@@ -1,0 +1,77 @@
+<div class="dashboard-layout">
+  <!-- header - shows MFE load status -->
+  <header class="dashboard-header">
+    <div class="header-brand">
+      <svg class="logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+        <line x1="3" y1="6" x2="21" y2="6" />
+        <path d="M16 10a4 4 0 0 1-8 0" />
+      </svg>
+      <h1 class="app-title">Product Dashboard</h1>
+    </div>
+
+    <nav class="header-nav">
+      <span class="nav-info">
+        <span class="badge mfe-badge">
+          <span class="indicator" [class.active]="productListLoaded()"></span>
+          Product List MFE
+        </span>
+        <span class="badge mfe-badge">
+          <span class="indicator" [class.active]="productDetailsLoaded()"></span>
+          Product Details MFE
+        </span>
+      </span>
+    </nav>
+
+    <!-- shows currently selected product name, if any -->
+    <div class="header-actions">
+      @if (hasSelectedProduct()) {
+        <span class="selected-product-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 11 12 14 22 4" />
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+          </svg>
+          {{ selectedProductName() }}
+        </span>
+      }
+    </div>
+  </header>
+
+  <!-- main split-panel layout (list on left, details on right) -->
+  <main class="dashboard-main">
+    <!-- product list MFE loads here -->
+    <section class="panel product-list-panel">
+      <div class="panel-content">
+        @if (productListLoading()) {
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading Product List...</p>
+          </div>
+        }
+        <ng-container #productListContainer></ng-container>
+      </div>
+    </section>
+
+    <!-- product details MFE loads here -->
+    <!-- has-selection class adds visual highlight when product is picked -->
+    <aside class="panel product-details-panel" [class.has-selection]="hasSelectedProduct()">
+      <div class="panel-content">
+        @if (productDetailsLoading()) {
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading Product Details...</p>
+          </div>
+        }
+        <ng-container #productDetailsContainer></ng-container>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="dashboard-footer">
+    <div class="footer-content">
+      <span class="tech-stack">
+        Demo NX mono repo built for FoodTech interview
+      </span>
+    </div>
+  </footer>
+</div>
